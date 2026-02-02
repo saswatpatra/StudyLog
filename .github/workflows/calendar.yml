@@ -22,8 +22,12 @@ jobs:
 
       - name: Commit Calendar
         run: |
-          git config user.name "calendar-bot"
-          git config user.email "bot@github.com"
-          git add .
-          git commit -m "Auto update calendar" || exit 0
+          git config --global user.name "calendar-bot"
+          git config --global user.email "bot@github.com"
+
+          git add 2026/Feb/calendar.md
+
+          git diff --cached --quiet || git commit -m "Auto update calendar"
+
           git push
+
