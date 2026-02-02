@@ -1,35 +1,43 @@
 import os
 import calendar
-from datetime import datetime
 
 YEAR = 2026
-MONTH = 2   # Feb
+MONTH = 2   # February
 
-FOLDER = "2026/Feb"
-OUTPUT = f"{FOLDER}/calendar.md"
+MONTH_NAME = "Feb"
+BASE = f"2026/{MONTH_NAME}"
+OUTPUT = f"{BASE}/calendar.md"
 
 cal = calendar.Calendar(calendar.MONDAY)
+weeks = cal.monthdayscalendar(YEAR, MONTH)
 
-days = cal.monthdayscalendar(YEAR, MONTH)
+# Find existing day files
+files = set()
 
-files = set(f.split(".")[0] for f in os.listdir(FOLDER) if f.endswith(".md"))
+if os.path.exists(BASE):
+    for f in os.listdir(BASE):
+        if f.endswith(".md") and f != "calendar.md":
+            files.add(f.replace(".md", ""))
 
-with open(OUTPUT, "w") as f:
+with open(OUTPUT, "w") as out:
 
-    f.write(f"# February {YEAR}\n\n")
+    out.write(f"# February {YEAR}\n\n")
 
-    f.write("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n")
-    f.write("|-----|-----|-----|-----|-----|-----|-----|\n")
+    out.write("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n")
+    out.write("|-----|-----|-----|-----|-----|-----|-----|\n")
 
-    for week in days:
+    for week in weeks:
         row = "|"
-        for d in week:
-            if d == 0:
+        for day in week:
+
+            if day == 0:
                 row += "     |"
             else:
-                key = f"{d:02d}"
-                if key in files:
-                    row += f" [{d}]({key}.md) |"
+                d = f"{day:02d}"
+
+                if d in files:
+                    row += f" [{day}]({d}.md) |"
                 else:
-                    row += f" {d} |"
-        f.write(row + "\n")
+                    row += f" {day} |"
+
+        out.write(row + "\n")
