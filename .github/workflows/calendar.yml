@@ -3,7 +3,7 @@ name: Auto Calendar
 on:
   push:
     paths:
-      - "2026/Feb/**.md"
+      - "2026/**.md"
 
 jobs:
   build:
@@ -17,17 +17,16 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Generate Calendar
+      - name: Generate Calendars
         run: python scripts/make_calendars.py
 
-      - name: Commit Calendar
+      - name: Commit Calendars
         run: |
           git config --global user.name "calendar-bot"
           git config --global user.email "bot@github.com"
 
-          git add 2026/Feb/calendar.md
+          git add 2026/**/calendar.md
 
-          git diff --cached --quiet || git commit -m "Auto update calendar"
+          git diff --cached --quiet || git commit -m "Auto update calendars"
 
           git push
-
