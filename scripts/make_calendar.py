@@ -1,43 +1,68 @@
 import os
 import calendar
 
-YEAR = 2026
-MONTH = 2   # February
+MONTHS = {
+    "Jan": 1, "Feb": 2, "Mar": 3, "Apr": 4,
+    "May": 5, "Jun": 6, "Jul": 7, "Aug": 8,
+    "Sep": 9, "Oct": 10, "Nov": 11, "Dec": 12
+}
 
-MONTH_NAME = "Feb"
-BASE = f"2026/{MONTH_NAME}"
-OUTPUT = f"{BASE}/calendar.md"
+BASE = os.getcwd()
 
-cal = calendar.Calendar(calendar.MONDAY)
-weeks = cal.monthdayscalendar(YEAR, MONTH)
 
-# Find existing day files
-files = set()
+def make_calendar(year, month_name):
 
-if os.path.exists(BASE):
-    for f in os.listdir(BASE):
+    month = MONTHS[month_name]
+    folder = os.path.join(str(year), month_name)
+    output = os.path.join(folder, "calendar.md")
+
+    cal = calendar.Calendar(calendar.MONDAY)
+    weeks = cal.monthdayscalendar(year, month)
+
+    files = set()
+
+    for f in os.listdir(folder):
         if f.endswith(".md") and f != "calendar.md":
             files.add(f.replace(".md", ""))
 
-with open(OUTPUT, "w") as out:
+    with open(output, "w") as out:
 
-    out.write(f"# February {YEAR}\n\n")
+        out.write(f"# {month_name} {year}\n\n")
 
-    out.write("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n")
-    out.write("|-----|-----|-----|-----|-----|-----|-----|\n")
+        out.write("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n")
+        out.write("|-----|-----|-----|-----|-----|-----|-----|\n")
 
-    for week in weeks:
-        row = "|"
-        for day in week:
+        for week in weeks:
+            row = "|"
 
-            if day == 0:
-                row += "     |"
-            else:
-                d = f"{day:02d}"
+            for day in week:
 
-                if d in files:
-                    row += f" [{day}]({d}.md) |"
+                if day == 0:
+                    row += "     |"
                 else:
-                    row += f" {day} |"
+                    d = f"{day:02d}"
 
-        out.write(row + "\n")
+                    if d in files:
+                        row += f" [{day}]({d}.md) |"
+                    else:
+                        row += f" {day} |"
+
+            out.write(row + "\n")
+
+
+for year in os.listdir(BASE):
+
+    if not year.isdigit():
+        continue
+
+    year_path = os.path.join(BASE, year)
+
+    if not os.path.isdir(year_path):
+        continue
+
+    for month in os.listdir(year_path):
+
+        if month not in MONTHS:
+            continue
+
+        make_calendar(int(year), month)
