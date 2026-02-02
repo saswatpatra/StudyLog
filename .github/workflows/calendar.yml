@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "2026/**.md"
+      - "template.md"
+      - "scripts/**.py"
 
 jobs:
   build:
@@ -17,16 +19,19 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Fill Daily Templates
+        run: python scripts/fill_template.py
+
       - name: Generate Calendars
         run: python scripts/make_calendars.py
 
-      - name: Commit Calendars
+      - name: Commit Updates
         run: |
           git config --global user.name "calendar-bot"
           git config --global user.email "bot@github.com"
 
-          git add 2026/**/calendar.md
+          git add .
 
-          git diff --cached --quiet || git commit -m "Auto update calendars"
+          git diff --cached --quiet || git commit -m "Auto update study logs"
 
           git push
