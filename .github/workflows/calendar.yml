@@ -20,7 +20,7 @@ jobs:
       - name: Generate Calendar
         run: python scripts/make_calendar.py
 
-      - name: Commit changes
+      - name: Commit Calendar
         run: |
           git config user.name "calendar-bot"
           git config user.email "bot@github.com"
