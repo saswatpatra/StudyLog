@@ -16,7 +16,7 @@ def make_calendar(year, month_name):
     folder = os.path.join(str(year), month_name)
     output = os.path.join(folder, "calendar.md")
 
-    cal = calendar.Calendar(calendar.MONDAY)
+    cal = calendar.Calendar(calendar.SUNDAY)
     weeks = cal.monthdayscalendar(year, month)
 
     files = set()
@@ -29,7 +29,7 @@ def make_calendar(year, month_name):
 
         out.write(f"# {month_name} {year}\n\n")
 
-        out.write("| Mon | Tue | Wed | Thu | Fri | Sat | Sun |\n")
+        out.write("| Sun | Mon | Tue | Wed | Thu | Fri | Sat |\n")
         out.write("|-----|-----|-----|-----|-----|-----|-----|\n")
 
         for week in weeks:
