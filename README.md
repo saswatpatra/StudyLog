@@ -11,3 +11,12 @@
 ---
 
 > Click a month to open its calendar.
+
+---
+
+## 📝 Active Tasks
+
+<!-- TASKS_START -->
+<!-- TASKS_END -->
+
+---
